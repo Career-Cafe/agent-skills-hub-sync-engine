@@ -5,7 +5,7 @@
 ### Production-Grade Skills, Guardrails & Workflows for Antigravity, Claude, Jules, Cursor & AI Engineers
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-brightgreen.svg)](#master-skills-catalog)
+[![Skills Count](https://img.shields.io/badge/Skills-21%20Available-brightgreen.svg)](#master-skills-catalog)
 [![Agent Runtimes](https://img.shields.io/badge/Compatible-Antigravity%20%7C%20Claude%20%7C%20Jules%20%7C%20Cursor-purple.svg)](#)
 [![Validation CI](https://img.shields.io/badge/CI-Validated-success.svg)](.github/workflows/validate.yml)
 [![Sync Engine](https://img.shields.io/badge/Sync%20Engine-Bi--Directional-orange.svg)](#cross-repository-synchronization-engine)
@@ -43,7 +43,7 @@
 
 When building applications with AI coding agents (such as Google Antigravity, Google Jules CLI, Claude Code, or Cursor), standard prompts frequently suffer from context drift, forgotten pre-commit checks, fragmented branch management, and conversational filler.
 
-This repository provides **22 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
+This repository provides **21 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
 1. **Trigger Semantics**: YAML frontmatter describing precise activation conditions.
 2. **Explicit Safety Directives**: Alerts (`[!IMPORTANT]`, `[!WARNING]`) enforcing non-negotiable boundaries.
 3. **Deterministic Runbooks**: Shell-verified commands and code recipes.
@@ -58,7 +58,7 @@ All skills are maintained centrally in this repository (**Hub**). Downstream dev
 ```mermaid
 flowchart TD
     subgraph Hub["Central Hub: MishraShardendu22/agent-skills"]
-        MasterSkills[".agents/skills/ (22 Modular Skills)"]
+        MasterSkills[".agents/skills/ (21 Modular Skills)"]
         Validator["CI Schema Validator (validate-skills.py)"]
     end
 
@@ -161,7 +161,6 @@ This populates `.agents/skills/` with the entire catalog.
 | Skill | Description | Direct Link |
 | :--- | :--- | :--- |
 | `ui-rules` | Strict frontend UI invariants: bans hover levitation/translate-y, eliminates AI aesthetic bloat, and enforces grounded design tokens. | [`.agents/skills/ui-rules`](.agents/skills/ui-rules/SKILL.md) |
-| `meridian-design-system` | Canonical reference and token guidelines for the Meridian Claude Design System across the mishrashardendu22 product ecosystem. | [`.agents/skills/meridian-design-system`](.agents/skills/meridian-design-system/SKILL.md) |
 
 ---
 

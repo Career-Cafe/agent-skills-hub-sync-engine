@@ -5,7 +5,7 @@ description: Strict frontend engineering and visual design invariants: bans hove
 
 # UI Rules & Visual Engineering Standards
 
-This skill defines the mandatory visual engineering standards, interaction invariants, and anti-patterns across all frontend applications and portfolios in the MishraShardendu22 product ecosystem.
+This skill defines the mandatory visual engineering standards, interaction invariants, and anti-patterns across all modern frontend applications, websites, and user interfaces.
 
 ---
 

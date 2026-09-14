@@ -170,29 +170,24 @@ This populates `.agents/skills/` with the entire catalog.
 
 ---
 
-### Codebase-Specific Skills Suites
+### Codebase-Specific Skills in `.agents/skills/`
 
-Skills tailored for specific target codebases are strictly segregated into isolated directories named `codebase-{codebase-name}/` and enforced via `scope: codebase-{codebase-name}` frontmatter. This preserves the universal portability of the master `.agents/skills/` catalog and prevents repository leaks:
+Skills tailored for specific target codebases reside directly alongside universal skills in `.agents/skills/` with explicit `scope: codebase-{codebase-name}` frontmatter. This keeps the entire catalog discoverable by AI coding assistants while enforcing strict domain boundaries:
 
-#### 1. CurioTech / CareerCafe (`codebase-curiotech-careercafe/` / `ct-skills/`)
-Domain-specific design tokens and surface modes for **CurioTech & CareerCafe** (`scope: codebase-curiotech-careercafe`):
+#### 1. CurioTech & CareerCafe (`.agents/skills/curiotech-careercafe/`)
+Official frozen design system, typography scales, surface protocols, and landing page specification for **CurioTech & CareerCafe** (`scope: codebase-curiotech-careercafe`):
 
 | Skill | Description | Direct Link |
 | :--- | :--- | :--- |
-| `careercafe-visual-design-system` | Visual design system tokens (Orange, Sage, teal-cast Charcoal), component geometry, shadows, and anti-patterns. | [`codebase-curiotech-careercafe/careercafe-visual-design-system`](codebase-curiotech-careercafe/careercafe-visual-design-system/SKILL.md) |
-| `careercafe-typography-and-themes` | IBM Plex Sans/Mono scales, System/Light/Dark 3-state selector, no-flash hydration, and accessibility QA. | [`codebase-curiotech-careercafe/careercafe-typography-and-themes`](codebase-curiotech-careercafe/careercafe-typography-and-themes/SKILL.md) |
-| `careercafe-surface-modes` | Multi-surface UI protocols: Marketing, Question Bank (17/30 type), SQL/Python IDE, and distraction-free Interview Mode. | [`codebase-curiotech-careercafe/careercafe-surface-modes`](codebase-curiotech-careercafe/careercafe-surface-modes/SKILL.md) |
-| `careercafe-landing-page-spec` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm. | [`codebase-curiotech-careercafe/careercafe-landing-page-spec`](codebase-curiotech-careercafe/careercafe-landing-page-spec/SKILL.md) |
+| `curiotech-careercafe` | Unified visual design system tokens (Orange, Sage, Charcoal), IBM Plex typography, surface modes, and frozen 12-section landing page spec. | [`.agents/skills/curiotech-careercafe`](.agents/skills/curiotech-careercafe/SKILL.md) |
 
-*(Note: `ct-skills/` is preserved as a symlink pointing to `codebase-curiotech-careercafe/` for backward compatibility).*
-
-#### 2. GitHub Backup Automation System (`codebase-github-backup-automation-system/`)
+#### 2. GitHub Backup Automation System (`.agents/skills/github-backup-architecture/`, `.agents/skills/agentic-observatory-workflow/`)
 Architecture and observability runbooks for the **GitHub Backup Automation System** (`scope: codebase-github-backup-automation-system`):
 
 | Skill | Description | Direct Link |
 | :--- | :--- | :--- |
-| `github-backup-architecture` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`codebase-github-backup-automation-system/github-backup-architecture`](codebase-github-backup-automation-system/github-backup-architecture/SKILL.md) |
-| `agentic-observatory-workflow` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`codebase-github-backup-automation-system/agentic-observatory-workflow`](codebase-github-backup-automation-system/agentic-observatory-workflow/SKILL.md) |
+| `github-backup-architecture` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`.agents/skills/github-backup-architecture`](.agents/skills/github-backup-architecture/SKILL.md) |
+| `agentic-observatory-workflow` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`.agents/skills/agentic-observatory-workflow`](.agents/skills/agentic-observatory-workflow/SKILL.md) |
 
 ---
 

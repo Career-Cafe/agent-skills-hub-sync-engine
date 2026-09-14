@@ -181,7 +181,13 @@ def is_worktree_dirty(wt_path: str) -> bool:
     if not os.path.exists(wt_path):
         return False
     code, out, _ = run_cmd(["git", "status", "--porcelain"], cwd=wt_path)
-    return code == 0 and len(out) > 0
+    if code != 0:
+        return True
+    lines = [
+        line for line in out.splitlines()
+        if line.strip() and not line.endswith(".wt-parent")
+    ]
+    return len(lines) > 0
 
 
 def clean_worktree_and_branch(repo_dir: str, branch: str, dry_run: bool = False) -> bool:

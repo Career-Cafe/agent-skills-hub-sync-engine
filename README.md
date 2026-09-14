@@ -5,7 +5,7 @@
 ### Production-Grade Skills, Guardrails & Workflows for Antigravity, Claude, Jules, Cursor & AI Engineers
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-brightgreen.svg)](#master-skills-catalog)
+[![Skills Count](https://img.shields.io/badge/Skills-25%20Available-brightgreen.svg)](#master-skills-catalog)
 [![Agent Runtimes](https://img.shields.io/badge/Compatible-Antigravity%20%7C%20Claude%20%7C%20Jules%20%7C%20Cursor-purple.svg)](#)
 [![Validation CI](https://img.shields.io/badge/CI-Validated-success.svg)](.github/workflows/validate.yml)
 [![Sync Engine](https://img.shields.io/badge/Sync%20Engine-Bi--Directional-orange.svg)](#cross-repository-synchronization-engine)
@@ -32,6 +32,7 @@
   - [6. System Architecture & SaaS Systems](#6-system-architecture--saas-systems)
   - [7. UI Design & Engineering Standards](#7-ui-design--engineering-standards)
 - [Codebase-Specific Skills Suites](#codebase-specific-skills-suites)
+- [Ephemeral Worktrees, Stacking & Webhook Lifecycle](#ephemeral-worktrees-stacking--webhook-lifecycle)
 - [Using skills-sync CLI](#using-skills-sync-cli)
 - [Automating Cross-Repo Sync via GitHub Actions](#automating-cross-repo-sync-via-github-actions)
 - [Creating a New Skill](#creating-a-new-skill)
@@ -44,7 +45,7 @@
 
 When building applications with AI coding agents (such as Google Antigravity, Google Jules CLI, Claude Code, or Cursor), standard prompts frequently suffer from context drift, forgotten pre-commit checks, fragmented branch management, and conversational filler.
 
-This repository provides **22 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
+This repository provides **25 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
 1. **Trigger Semantics**: YAML frontmatter describing precise activation conditions.
 2. **Explicit Safety Directives**: Alerts (`[!IMPORTANT]`, `[!WARNING]`) enforcing non-negotiable boundaries.
 3. **Deterministic Runbooks**: Shell-verified commands and code recipes.
@@ -59,7 +60,7 @@ All skills are maintained centrally in this repository (**Hub**). Downstream dev
 ```mermaid
 flowchart TD
     subgraph Hub["Central Hub: MishraShardendu22/agent-skills"]
-        MasterSkills[".agents/skills/ (22 Modular Skills)"]
+        MasterSkills[".agents/skills/ (25 Modular Skills)"]
         Validator["CI Schema Validator (validate-skills.py)"]
     end
 
@@ -120,9 +121,12 @@ This populates `.agents/skills/` with the entire catalog.
 | :--- | :--- | :--- |
 | `git-branch-management` | Rules and procedures for creating, naming, structuring, and navigating Git branches. | [`.agents/skills/git-branch-management`](.agents/skills/git-branch-management/SKILL.md) |
 | `git-commit-workflow` | Commit design taxonomy, semantic commit formatting, and mandatory GPG signing. | [`.agents/skills/git-commit-workflow`](.agents/skills/git-commit-workflow/SKILL.md) |
+| `git-worktree-management` | Ephemeral Git worktree isolation, directory conventions, 1:1 mapping, and multi-agent safety locks. | [`.agents/skills/git-worktree-management`](.agents/skills/git-worktree-management/SKILL.md) |
+| `stacked-pr-workflow` | Decomposing features into dependent chains of atomic PRs with automated base retargeting and rebasing. | [`.agents/skills/stacked-pr-workflow`](.agents/skills/stacked-pr-workflow/SKILL.md) |
+| `local-webhook-automation` | Local event-driven development: `gh webhook forward` relay, systemd user daemon, and cold-boot reconciliation. | [`.agents/skills/local-webhook-automation`](.agents/skills/local-webhook-automation/SKILL.md) |
 | `pull-request-management` | Runbooks for authoring and managing clean PRs targeting `main` with PR consolidation. | [`.agents/skills/pull-request-management`](.agents/skills/pull-request-management/SKILL.md) |
 | `github-pr-issue-automation` | Auto-assignment, conventional label categorization, and GitHub markdown standards. | [`.agents/skills/github-pr-issue-automation`](.agents/skills/github-pr-issue-automation/SKILL.md) |
-| `git-post-merge-cleanup` | Post-merge branch synchronization, stale branch pruning, and repository garbage collection. | [`.agents/skills/git-post-merge-cleanup`](.agents/skills/git-post-merge-cleanup/SKILL.md) |
+| `git-post-merge-cleanup` | Post-merge branch synchronization, worktree removal, stale branch pruning, and garbage collection. | [`.agents/skills/git-post-merge-cleanup`](.agents/skills/git-post-merge-cleanup/SKILL.md) |
 
 ### 3. AI Engineering & Autonomous Review
 
@@ -189,6 +193,46 @@ Architecture and observability runbooks for the **GitHub Backup Automation Syste
 | :--- | :--- | :--- |
 | `github-backup-architecture` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`codebase-github-backup-automation-system/github-backup-architecture`](codebase-github-backup-automation-system/github-backup-architecture/SKILL.md) |
 | `agentic-observatory-workflow` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`codebase-github-backup-automation-system/agentic-observatory-workflow`](codebase-github-backup-automation-system/agentic-observatory-workflow/SKILL.md) |
+
+---
+
+## Ephemeral Worktrees, Stacking & Webhook Lifecycle
+
+The repository includes a dedicated workflow engine for running tasks in isolated Git worktrees, managing stacked pull requests, and automatically pruning local state via real-time webhooks:
+
+### 1. Ephemeral Worktrees (`skills-sync wt`)
+Every task or agent operates in its own worktree directory (`.worktrees/wt-<name>`) preserving a pristine `main` directory:
+
+```bash
+# Create new isolated branch and worktree
+skills-sync wt new feat-database-layer
+
+# Create a stacked branch building on top of the current worktree
+skills-sync wt stack feat-api-endpoints
+
+# Validate, push, and create PR targeting the correct base branch
+skills-sync wt pr "feat(api): expose database endpoints"
+
+# List all active worktrees
+skills-sync wt list
+
+# Sweep and prune worktrees for already-merged PRs
+skills-sync wt sweep
+```
+
+### 2. Local Webhook Daemon & Cold-Boot Catch-Up
+The local daemon (`scripts/git-webhook-daemon.py`) receives live `pull_request` events from GitHub via `gh webhook forward`:
+- **Live Cleanup**: When a PR is merged, the linked worktree and local branch are deleted in `< 400ms`.
+- **Dirty State Guard**: If uncommitted edits exist in the worktree, deletion is strictly aborted and a desktop notification is sent.
+- **Cold-Boot Reconciliation**: When starting up after an offline period (or if PRs were merged from another machine), it reconciles local worktrees against GitHub's merged PR list automatically.
+
+```bash
+# Run daemon in foreground (or deploy via systemd user service)
+python3 scripts/git-webhook-daemon.py
+
+# Relay GitHub webhooks directly to local daemon
+gh webhook forward --repo=MishraShardendu22/agent-skills --events=pull_request --url=http://127.0.0.1:9876/events
+```
 
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: careercafe-typography-and-themes
+scope: codebase-curiotech-careercafe
 description: >-
   CurioTech and CareerCafe typography hierarchy and 3-state theme engineering: IBM Plex Sans/Mono, System/Light/Dark selector, no-flash theme resolution, and accessibility QA.
 ---

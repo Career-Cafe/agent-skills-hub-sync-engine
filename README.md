@@ -164,6 +164,19 @@ This populates `.agents/skills/` with the entire catalog.
 
 ---
 
+### Project-Specific Skills (`ct-skills/`)
+
+Domain-specific skills tailored for **CurioTech** and **CareerCafe** (`CurioTech-CareerCafe`) are maintained in the [`ct-skills/`](ct-skills/README.md) directory to preserve the universal portability of the master catalog:
+
+| Skill | Description | Direct Link |
+| :--- | :--- | :--- |
+| `careercafe-visual-design-system` | Visual design system tokens (Orange, Sage, teal-cast Charcoal), component geometry, shadows, and anti-patterns. | [`ct-skills/careercafe-visual-design-system`](ct-skills/careercafe-visual-design-system/SKILL.md) |
+| `careercafe-typography-and-themes` | IBM Plex Sans/Mono scales, System/Light/Dark 3-state selector, no-flash hydration, and accessibility QA. | [`ct-skills/careercafe-typography-and-themes`](ct-skills/careercafe-typography-and-themes/SKILL.md) |
+| `careercafe-surface-modes` | Multi-surface UI protocols: Marketing, Question Bank (17/30 type), SQL/Python IDE, and distraction-free Interview Mode. | [`ct-skills/careercafe-surface-modes`](ct-skills/careercafe-surface-modes/SKILL.md) |
+| `careercafe-landing-page-spec` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm. | [`ct-skills/careercafe-landing-page-spec`](ct-skills/careercafe-landing-page-spec/SKILL.md) |
+
+---
+
 ## Using skills-sync CLI
 
 The `skills-sync` tool provides an interface for managing skills across any local repository:

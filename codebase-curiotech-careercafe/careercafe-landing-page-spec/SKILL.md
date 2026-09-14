@@ -1,5 +1,6 @@
 ---
 name: careercafe-landing-page-spec
+scope: codebase-curiotech-careercafe
 description: >-
   CurioTech and CareerCafe landing page specifications: locked 12-section hierarchy, visual spacing rhythm, hero proof rules, and real product screenshot standards.
 ---

@@ -1,5 +1,6 @@
 ---
 name: careercafe-surface-modes
+scope: codebase-curiotech-careercafe
 description: >-
   CurioTech and CareerCafe four-surface behavior protocols: Marketing Landing, Question Bank reading column, executable SQL/Python playground, and distraction-free Interview Mode.
 ---

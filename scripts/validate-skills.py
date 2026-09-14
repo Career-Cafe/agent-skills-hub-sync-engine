@@ -1,12 +1,22 @@
 #!/usr/bin/env python3
 """
 Skill Validator Script for agent-skills
-Validates YAML frontmatter, naming conventions, and structure for all SKILL.md files.
+Validates YAML frontmatter, naming conventions, scope taxonomy (generic vs codebase-{name}),
+and structural integrity for all SKILL.md files across the repository.
 """
 
 import sys
 import re
 from pathlib import Path
+
+# Prohibited codebase leakage terms that must NEVER appear in generic skills
+GENERIC_PROHIBITED_TERMS = [
+    "github-backup",
+    "curiotech",
+    "careercafe",
+    "/home/ms22",
+    "shardendumishra",
+]
 
 def parse_frontmatter(content: str) -> tuple[dict, str]:
     """Parse YAML frontmatter delimited by ---."""
@@ -47,8 +57,8 @@ def parse_frontmatter(content: str) -> tuple[dict, str]:
         
     return data, body
 
-def validate_skill(skill_path: Path) -> list[str]:
-    """Validate an individual skill directory and SKILL.md file."""
+def validate_skill(skill_path: Path, expected_scope: str = None) -> list[str]:
+    """Validate an individual skill directory and SKILL.md file with scope enforcement."""
     errors = []
     skill_md = skill_path / "SKILL.md"
     
@@ -79,6 +89,29 @@ def validate_skill(skill_path: Path) -> list[str]:
         
     if not re.search(r"^#\s+.+", body, re.MULTILINE):
         errors.append(f"{skill_path.name}/SKILL.md: Missing top-level Markdown heading (# Title)")
+
+    # Scope field validation
+    scope = frontmatter.get("scope")
+    if not scope:
+        errors.append(f"{skill_path.name}/SKILL.md: Missing 'scope' field (must be 'generic' or 'codebase-<name>')")
+    else:
+        if expected_scope:
+            if scope != expected_scope:
+                errors.append(f"{skill_path.name}/SKILL.md: Scope '{scope}' does not match expected '{expected_scope}'")
+        elif not (scope == "generic" or scope.startswith("codebase-")):
+            errors.append(f"{skill_path.name}/SKILL.md: Invalid scope '{scope}'. Must be 'generic' or start with 'codebase-'")
+
+    # Generic scope isolation check: zero codebase leakage terms allowed
+    if scope == "generic":
+        for term in GENERIC_PROHIBITED_TERMS:
+            # Check body and description case-insensitively, except if in governance definition
+            if skill_path.name != "skill-taxonomy-and-scope-governance":
+                if term.lower() in content.lower():
+                    errors.append(f"{skill_path.name}/SKILL.md: Forbidden codebase-specific term '{term}' found in generic skill")
+    elif scope and scope.startswith("codebase-"):
+        # Codebase skills must have an explicit scope disclaimer in markdown body
+        if not re.search(r"CODEBASE-SPECIFIC|PROJECT-SPECIFIC", body, re.IGNORECASE):
+            errors.append(f"{skill_path.name}/SKILL.md: Codebase skill must include an explicit '[!IMPORTANT]' disclaimer declaring its codebase scope")
         
     return errors
 
@@ -99,35 +132,64 @@ def main():
         print("[ERROR] Could not locate skills directory (.agents/skills)")
         sys.exit(1)
         
-    skill_folders = [p for p in target_dir.iterdir() if p.is_dir() and not p.name.startswith(".")]
-    if not skill_folders:
+    all_errors = []
+    
+    # 1. Validate Generic Master Catalog
+    generic_folders = [p for p in target_dir.iterdir() if p.is_dir() and not p.name.startswith(".")]
+    if not generic_folders:
         print("[ERROR] No skills found in", target_dir)
         sys.exit(1)
         
-    print(f"[INFO] Validating {len(skill_folders)} skills in {target_dir.relative_to(repo_root)}...\n")
-    
-    all_errors = []
-    valid_count = 0
-    
-    for skill_path in sorted(skill_folders):
-        errors = validate_skill(skill_path)
+    print(f"[INFO] Validating {len(generic_folders)} generic skills in {target_dir.relative_to(repo_root)} (scope: generic)...\n")
+    generic_valid = 0
+    for skill_path in sorted(generic_folders):
+        errors = validate_skill(skill_path, expected_scope="generic")
         if errors:
             all_errors.extend(errors)
             print(f"  [FAIL] {skill_path.name}: {len(errors)} error(s)")
             for err in errors:
                 print(f"         - {err}")
         else:
-            valid_count += 1
+            generic_valid += 1
             print(f"  [PASS] {skill_path.name}")
             
-    print("\n" + "=" * 50)
-    print(f"Summary: {valid_count}/{len(skill_folders)} skills valid.")
+    print(f"\nGeneric Skills Summary: {generic_valid}/{len(generic_folders)} valid.\n")
+
+    # 2. Validate Codebase-Specific Directories
+    codebase_dirs = [p for p in repo_root.iterdir() if p.is_dir() and not p.is_symlink() and p.name.startswith("codebase-")]
+    codebase_total = 0
+    codebase_valid = 0
+
+    if codebase_dirs:
+        print(f"[INFO] Discovered {len(codebase_dirs)} codebase-specific directory suite(s)...")
+        for cb_dir in sorted(codebase_dirs):
+            cb_name = cb_dir.name
+            skills = [p for p in cb_dir.iterdir() if p.is_dir() and (p / "SKILL.md").is_file()]
+            print(f"\n  [SUITE] {cb_name} ({len(skills)} skills, expected scope: {cb_name})")
+            for skill_path in sorted(skills):
+                codebase_total += 1
+                errors = validate_skill(skill_path, expected_scope=cb_name)
+                if errors:
+                    all_errors.extend(errors)
+                    print(f"    [FAIL] {skill_path.name}: {len(errors)} error(s)")
+                    for err in errors:
+                        print(f"           - {err}")
+                else:
+                    codebase_valid += 1
+                    print(f"    [PASS] {skill_path.name}")
+
+        print(f"\nCodebase Skills Summary: {codebase_valid}/{codebase_total} valid.")
+
+    print("\n" + "=" * 60)
+    total_validated = len(generic_folders) + codebase_total
+    total_valid = generic_valid + codebase_valid
+    print(f"Total Validation Summary: {total_valid}/{total_validated} skills valid across all scopes.")
     
     if all_errors:
-        print(f"[ERROR] Validation failed with {len(all_errors)} error(s).")
+        print(f"\n[ERROR] Validation failed with {len(all_errors)} error(s).")
         sys.exit(1)
     else:
-        print("[SUCCESS] All skills passed validation.")
+        print("\n[SUCCESS] All skills passed validation across all scopes.")
         sys.exit(0)
 
 if __name__ == "__main__":

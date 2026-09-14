@@ -5,7 +5,7 @@
 ### Production-Grade Skills, Guardrails & Workflows for Antigravity, Claude, Jules, Cursor & AI Engineers
 
 [![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills Count](https://img.shields.io/badge/Skills-21%20Available-brightgreen.svg)](#master-skills-catalog)
+[![Skills Count](https://img.shields.io/badge/Skills-22%20Available-brightgreen.svg)](#master-skills-catalog)
 [![Agent Runtimes](https://img.shields.io/badge/Compatible-Antigravity%20%7C%20Claude%20%7C%20Jules%20%7C%20Cursor-purple.svg)](#)
 [![Validation CI](https://img.shields.io/badge/CI-Validated-success.svg)](.github/workflows/validate.yml)
 [![Sync Engine](https://img.shields.io/badge/Sync%20Engine-Bi--Directional-orange.svg)](#cross-repository-synchronization-engine)
@@ -31,6 +31,7 @@
   - [5. Code Quality, Testing & Simplification](#5-code-quality-testing--simplification)
   - [6. System Architecture & SaaS Systems](#6-system-architecture--saas-systems)
   - [7. UI Design & Engineering Standards](#7-ui-design--engineering-standards)
+- [Codebase-Specific Skills Suites](#codebase-specific-skills-suites)
 - [Using skills-sync CLI](#using-skills-sync-cli)
 - [Automating Cross-Repo Sync via GitHub Actions](#automating-cross-repo-sync-via-github-actions)
 - [Creating a New Skill](#creating-a-new-skill)
@@ -43,7 +44,7 @@
 
 When building applications with AI coding agents (such as Google Antigravity, Google Jules CLI, Claude Code, or Cursor), standard prompts frequently suffer from context drift, forgotten pre-commit checks, fragmented branch management, and conversational filler.
 
-This repository provides **21 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
+This repository provides **22 modular, tested agent skills** following the open **`SKILL.md` specification**. Each skill defines:
 1. **Trigger Semantics**: YAML frontmatter describing precise activation conditions.
 2. **Explicit Safety Directives**: Alerts (`[!IMPORTANT]`, `[!WARNING]`) enforcing non-negotiable boundaries.
 3. **Deterministic Runbooks**: Shell-verified commands and code recipes.
@@ -58,7 +59,7 @@ All skills are maintained centrally in this repository (**Hub**). Downstream dev
 ```mermaid
 flowchart TD
     subgraph Hub["Central Hub: MishraShardendu22/agent-skills"]
-        MasterSkills[".agents/skills/ (21 Modular Skills)"]
+        MasterSkills[".agents/skills/ (22 Modular Skills)"]
         Validator["CI Schema Validator (validate-skills.py)"]
     end
 
@@ -111,6 +112,7 @@ This populates `.agents/skills/` with the entire catalog.
 | Skill | Description | Direct Link |
 | :--- | :--- | :--- |
 | `professional-communication-standard` | Enforces strictly emoji-free, concise, objective, and technically rigorous responses without fluff or conversational preambles. | [`.agents/skills/professional-communication-standard`](.agents/skills/professional-communication-standard/SKILL.md) |
+| `skill-taxonomy-and-scope-governance` | Enforces structural taxonomy, `scope: generic` vs `scope: codebase-{name}` frontmatter boundaries, and automated anti-leak validation. | [`.agents/skills/skill-taxonomy-and-scope-governance`](.agents/skills/skill-taxonomy-and-scope-governance/SKILL.md) |
 
 ### 2. Autonomous Git & Version Control
 
@@ -164,16 +166,29 @@ This populates `.agents/skills/` with the entire catalog.
 
 ---
 
-### Project-Specific Skills (`ct-skills/`)
+### Codebase-Specific Skills Suites
 
-Domain-specific skills tailored for **CurioTech** and **CareerCafe** (`CurioTech-CareerCafe`) are maintained in the [`ct-skills/`](ct-skills/README.md) directory to preserve the universal portability of the master catalog:
+Skills tailored for specific target codebases are strictly segregated into isolated directories named `codebase-{codebase-name}/` and enforced via `scope: codebase-{codebase-name}` frontmatter. This preserves the universal portability of the master `.agents/skills/` catalog and prevents repository leaks:
+
+#### 1. CurioTech / CareerCafe (`codebase-curiotech-careercafe/` / `ct-skills/`)
+Domain-specific design tokens and surface modes for **CurioTech & CareerCafe** (`scope: codebase-curiotech-careercafe`):
 
 | Skill | Description | Direct Link |
 | :--- | :--- | :--- |
-| `careercafe-visual-design-system` | Visual design system tokens (Orange, Sage, teal-cast Charcoal), component geometry, shadows, and anti-patterns. | [`ct-skills/careercafe-visual-design-system`](ct-skills/careercafe-visual-design-system/SKILL.md) |
-| `careercafe-typography-and-themes` | IBM Plex Sans/Mono scales, System/Light/Dark 3-state selector, no-flash hydration, and accessibility QA. | [`ct-skills/careercafe-typography-and-themes`](ct-skills/careercafe-typography-and-themes/SKILL.md) |
-| `careercafe-surface-modes` | Multi-surface UI protocols: Marketing, Question Bank (17/30 type), SQL/Python IDE, and distraction-free Interview Mode. | [`ct-skills/careercafe-surface-modes`](ct-skills/careercafe-surface-modes/SKILL.md) |
-| `careercafe-landing-page-spec` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm. | [`ct-skills/careercafe-landing-page-spec`](ct-skills/careercafe-landing-page-spec/SKILL.md) |
+| `careercafe-visual-design-system` | Visual design system tokens (Orange, Sage, teal-cast Charcoal), component geometry, shadows, and anti-patterns. | [`codebase-curiotech-careercafe/careercafe-visual-design-system`](codebase-curiotech-careercafe/careercafe-visual-design-system/SKILL.md) |
+| `careercafe-typography-and-themes` | IBM Plex Sans/Mono scales, System/Light/Dark 3-state selector, no-flash hydration, and accessibility QA. | [`codebase-curiotech-careercafe/careercafe-typography-and-themes`](codebase-curiotech-careercafe/careercafe-typography-and-themes/SKILL.md) |
+| `careercafe-surface-modes` | Multi-surface UI protocols: Marketing, Question Bank (17/30 type), SQL/Python IDE, and distraction-free Interview Mode. | [`codebase-curiotech-careercafe/careercafe-surface-modes`](codebase-curiotech-careercafe/careercafe-surface-modes/SKILL.md) |
+| `careercafe-landing-page-spec` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm. | [`codebase-curiotech-careercafe/careercafe-landing-page-spec`](codebase-curiotech-careercafe/careercafe-landing-page-spec/SKILL.md) |
+
+*(Note: `ct-skills/` is preserved as a symlink pointing to `codebase-curiotech-careercafe/` for backward compatibility).*
+
+#### 2. GitHub Backup Automation System (`codebase-github-backup-automation-system/`)
+Architecture and observability runbooks for the **GitHub Backup Automation System** (`scope: codebase-github-backup-automation-system`):
+
+| Skill | Description | Direct Link |
+| :--- | :--- | :--- |
+| `github-backup-architecture` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`codebase-github-backup-automation-system/github-backup-architecture`](codebase-github-backup-automation-system/github-backup-architecture/SKILL.md) |
+| `agentic-observatory-workflow` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`codebase-github-backup-automation-system/agentic-observatory-workflow`](codebase-github-backup-automation-system/agentic-observatory-workflow/SKILL.md) |
 
 ---
 
@@ -241,6 +256,7 @@ To author a new skill:
    name: my-new-skill
    description: >-
      When to use this skill and what high-level workflows it accomplishes.
+   scope: generic
    ---
 
    # My New Skill Title

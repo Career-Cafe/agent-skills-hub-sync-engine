@@ -1,5 +1,6 @@
 ---
 name: careercafe-visual-design-system
+scope: codebase-curiotech-careercafe
 description: >-
   CurioTech and CareerCafe visual design system standard: color tokens (Orange action, Sage state, teal-cast Charcoal structure), surface tokens, component geometry, shadows, motion, and visual invariants.
 ---

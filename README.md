@@ -174,12 +174,15 @@ This populates `.agents/skills/` with the entire catalog.
 
 Skills tailored for specific target codebases reside directly alongside universal skills in `.agents/skills/` with explicit `scope: codebase-{codebase-name}` frontmatter. This keeps the entire catalog discoverable by AI coding assistants while enforcing strict domain boundaries:
 
-#### 1. CurioTech & CareerCafe (`.agents/skills/curiotech-careercafe/`)
-Official frozen design system, typography scales, surface protocols, and landing page specification for **CurioTech & CareerCafe** (`scope: codebase-curiotech-careercafe`):
+#### 1. CareerCafe & CurioTech (`.agents/skills/careercafe-curiotech/`)
+Official frozen design system, typography scales, surface protocols, and landing page specification for **CareerCafe & CurioTech** (`scope: codebase-curiotech-careercafe`):
 
-| Skill | Description | Direct Link |
+| Skill File | Description | Direct Link |
 | :--- | :--- | :--- |
-| `curiotech-careercafe` | Unified visual design system tokens (Orange, Sage, Charcoal), IBM Plex typography, surface modes, and frozen 12-section landing page spec. | [`.agents/skills/curiotech-careercafe`](.agents/skills/curiotech-careercafe/SKILL.md) |
+| `careercafe-visual-design-system.md` | Brand colors (Orange `#BC4A1E`, Sage `#7F9B6D`, teal-cast Charcoal `#17252B`), surfaces, and visual anti-patterns. | [`.agents/skills/careercafe-curiotech/careercafe-visual-design-system.md`](.agents/skills/careercafe-curiotech/careercafe-visual-design-system.md) |
+| `careercafe-typography-and-themes.md` | IBM Plex Sans/Mono font scales, 3-state theme selector (System/Light/Dark), zero-flash hydration, and accessibility QA. | [`.agents/skills/careercafe-curiotech/careercafe-typography-and-themes.md`](.agents/skills/careercafe-curiotech/careercafe-typography-and-themes.md) |
+| `careercafe-surface-modes.md` | UI surface protocols: Marketing, Question Bank (17/30 types), SQL/Python IDE, and distraction-free Interview Mode. | [`.agents/skills/careercafe-curiotech/careercafe-surface-modes.md`](.agents/skills/careercafe-curiotech/careercafe-surface-modes.md) |
+| `careercafe-landing-page-spec.md` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm tokens. | [`.agents/skills/careercafe-curiotech/careercafe-landing-page-spec.md`](.agents/skills/careercafe-curiotech/careercafe-landing-page-spec.md) |
 
 #### 2. GitHub Backup Automation System (`.agents/skills/github-backup-architecture/`, `.agents/skills/agentic-observatory-workflow/`)
 Architecture and observability runbooks for the **GitHub Backup Automation System** (`scope: codebase-github-backup-automation-system`):

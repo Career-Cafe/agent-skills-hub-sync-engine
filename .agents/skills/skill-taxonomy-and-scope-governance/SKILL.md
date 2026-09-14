@@ -31,8 +31,9 @@ flowchart TD
     Generic --> G2["docker-first-architecture (scope: generic)"]
     Generic --> G3["modern-toolchain-standard (scope: generic)"]
 
-    Codebase1 --> C1["careercafe-visual-design-system (scope: codebase-curiotech-careercafe)"]
-    Codebase2 --> C2["github-backup-architecture (scope: codebase-github-backup-automation-system)"]
+    Codebase --> C1["careercafe-curiotech (scope: codebase-curiotech-careercafe)"]
+    Codebase --> C2["github-backup-architecture (scope: codebase-github-backup-automation-system)"]
+    Codebase --> C3["agentic-observatory-workflow (scope: codebase-github-backup-automation-system)"]
 ```
 
 ---

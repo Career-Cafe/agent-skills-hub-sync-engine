@@ -184,13 +184,14 @@ Official frozen design system, typography scales, surface protocols, and landing
 | `careercafe-surface-modes.md` | UI surface protocols: Marketing, Question Bank (17/30 types), SQL/Python IDE, and distraction-free Interview Mode. | [`.agents/skills/careercafe-curiotech/careercafe-surface-modes.md`](.agents/skills/careercafe-curiotech/careercafe-surface-modes.md) |
 | `careercafe-landing-page-spec.md` | Frozen 12-section architecture, Hero formula, 16:10 real screenshot rules, and spacing rhythm tokens. | [`.agents/skills/careercafe-curiotech/careercafe-landing-page-spec.md`](.agents/skills/careercafe-curiotech/careercafe-landing-page-spec.md) |
 
-#### 2. GitHub Backup Automation System (`.agents/skills/github-backup-architecture/`, `.agents/skills/agentic-observatory-workflow/`)
+#### 2. GitHub Backup Automation System (`.agents/skills/github-backup-automation-system/`)
 Architecture and observability runbooks for the **GitHub Backup Automation System** (`scope: codebase-github-backup-automation-system`):
 
-| Skill | Description | Direct Link |
+| Skill File | Description | Direct Link |
 | :--- | :--- | :--- |
-| `github-backup-architecture` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`.agents/skills/github-backup-architecture`](.agents/skills/github-backup-architecture/SKILL.md) |
-| `agentic-observatory-workflow` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`.agents/skills/agentic-observatory-workflow`](.agents/skills/agentic-observatory-workflow/SKILL.md) |
+| `SKILL.md` | Master index, architecture summary, and subsystem topology for the GitHub Backup System. | [`.agents/skills/github-backup-automation-system/SKILL.md`](.agents/skills/github-backup-automation-system/SKILL.md) |
+| `github-backup-architecture.md` | Go 1.24+ runtime, dual git-lfs/restic engines, zero-trust cryptographic verification, and systemd automation. | [`.agents/skills/github-backup-automation-system/github-backup-architecture.md`](.agents/skills/github-backup-automation-system/github-backup-architecture.md) |
+| `agentic-observatory-workflow.md` | LangChain RAG, pgvector hybrid search, HITL verification gates, and telemetry pipelines for the backup service. | [`.agents/skills/github-backup-automation-system/agentic-observatory-workflow.md`](.agents/skills/github-backup-automation-system/agentic-observatory-workflow.md) |
 
 ---
 

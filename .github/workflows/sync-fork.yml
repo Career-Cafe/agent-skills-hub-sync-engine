@@ -1,0 +1,62 @@
+# ==============================================================================
+# GitHub Actions — Auto-Sync main branch to Career-Cafe fork on every push
+# ==============================================================================
+#
+# PURPOSE:
+#   Every time a commit lands on `main` in MishraShardendu22/agent-skills,
+#   this workflow automatically force-pushes the exact same main branch state
+#   to Career-Cafe/agent-skills-hub-sync-engine.
+#
+# HOW IT WORKS:
+#   Uses a Personal Access Token (PAT) with repo scope stored as the
+#   CC_SYNC_PAT repository secret. The PAT must belong to an account that
+#   has write access to Career-Cafe/agent-skills-hub-sync-engine.
+#
+# REQUIRED SECRET:
+#   CC_SYNC_PAT — a GitHub PAT with `repo` scope that has write access to
+#   the Career-Cafe org. Add it at:
+#   https://github.com/MishraShardendu22/agent-skills/settings/secrets/actions
+#
+# SAFETY:
+#   - Only runs on the `main` branch, never on feature branches.
+#   - Uses --force (safe here because Career-Cafe is a pure mirror of this repo).
+#   - If CC_SYNC_PAT is not set, the workflow fails loudly to alert the owner.
+# ==============================================================================
+name: "main merged — Sync to Career-Cafe fork"
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  sync-to-career-cafe:
+    name: "Push main → Career-Cafe/agent-skills-hub-sync-engine"
+    if: startsWith(github.repository, 'MishraShardendu22/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout full history"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Configure SSH and push to Career-Cafe fork"
+        env:
+          SSH_KEY: ${{ secrets.CC_SYNC_SSH_KEY }}
+        run: |
+          if [ -z "$SSH_KEY" ]; then
+            echo "❌ CC_SYNC_SSH_KEY secret is not set."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t ed25519,rsa github.com >> ~/.ssh/known_hosts
+          git remote add career-cafe git@github.com:Career-Cafe/agent-skills-hub-sync-engine.git || git remote set-url career-cafe git@github.com:Career-Cafe/agent-skills-hub-sync-engine.git
+          git push career-cafe main:main --force
+          echo "✅ Career-Cafe/agent-skills-hub-sync-engine synced to $(git rev-parse --short HEAD)"
+
+

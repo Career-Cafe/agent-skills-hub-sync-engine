@@ -4,7 +4,7 @@
 
 ### Production-Grade Skills, Guardrails & Workflows for Antigravity, Claude, Jules, Cursor & AI Engineers
 
-[![MIT License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
 [![Skills Count](https://img.shields.io/badge/Skills-25%20Available-brightgreen.svg)](#master-skills-catalog)
 [![Agent Runtimes](https://img.shields.io/badge/Compatible-Antigravity%20%7C%20Claude%20%7C%20Jules%20%7C%20Cursor-purple.svg)](#)
 [![Validation CI](https://img.shields.io/badge/CI-Validated-success.svg)](.github/workflows/validate.yml)
@@ -326,5 +326,8 @@ Contributions are welcomed. Please read [CONTRIBUTING.md](CONTRIBUTING.md) for d
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
-Copyright (c) 2026 **Shardendu Mishra**.
+This project is proprietary software.
+All rights reserved.
+
+Unauthorized copying, distribution, modification, or use is prohibited.
+See [LICENSE](LICENSE) for the full terms.

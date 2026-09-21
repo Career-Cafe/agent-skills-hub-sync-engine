@@ -16,13 +16,13 @@ description: >-
 
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│                    Next.js 16 Frontend                      │
+│              github-backup-dashboard (Next.js 16)            │
 │                  (Deployed on Vercel Edge)                  │
 └───────────────┬─────────────────────────────┬───────────────┘
                 │ REST / SSE                  │ REST / WebSocket
                 ▼                             ▼
 ┌─────────────────────────────┐ ┌─────────────────────────────┐
-│     Python Observatory      │ │         Go Backend          │
+│ github-backup-observatory   │ │     github-backup-api      │
 │    (Deployed on Vercel)     │ │    (Deployed on Render)     │
 │   FastAPI · LangChain AI    │ │  Fiber v2 · Live WS Stream  │
 └───────────────┬─────────────┘ └─────────────┬───────────────┘
@@ -48,12 +48,12 @@ description: >-
 
 ## 2. Service Responsibilities & Configuration Modules
 
-### Next.js Frontend (`frontend/`)
+### Dashboard Application (`src/apps/github-backup-dashboard/`; legacy `frontend/`)
 - **Framework**: Next.js 16 App Router with Turbopack, Tailwind CSS, Biome linter, TypeScript.
 - **Responsibilities**: Unified Dashboard, AI Chat Interface, Vector Search Playground, Real-time WebSocket Log Streaming, Human-in-the-Loop Action Approvals.
-- **Config**: `frontend/src/config/env.ts` (Never call `process.env` directly in UI components).
+- **Config**: `src/apps/github-backup-dashboard/src/config/env.ts` (Never call `process.env` directly in UI components).
 
-### Python Observatory (`agentic-observatory/`)
+### AI Observatory Service (`src/services/github-backup-observatory/`; legacy `agentic-observatory/`)
 - **Framework**: FastAPI, LangChain, asyncpg, SQLAlchemy, httpx, Jinja2, uv package manager.
 - **Responsibilities**:
   - Multi-turn AI Agent reasoning loop (`invoke_agent`, `stream_agent`).
@@ -61,24 +61,24 @@ description: >-
   - Background embedding generation pipeline (`embedding_generations`, `embedding_jobs`, `embedding_chunks`).
   - Human-in-the-loop report generation and SMTP email dispatch (`send_report_email`).
   - JWT Authentication for dashboard chat.
-- **Config**: `agentic-observatory/config/settings.py`.
+- **Config**: `src/services/github-backup-observatory/config/settings.py`.
 
-### Go Backend (`backend/`)
+### Backup API Service (`src/services/github-backup-api/`; legacy `backend/`)
 - **Framework**: Go Fiber v2, pgxpool connection pool.
 - **Responsibilities**:
   - Ingesting backup execution runs, repository results, and structured logs from the worker.
   - Serving real-time WebSocket hub for active backup runs (`/ws`).
   - Exposing database metrics and system telemetry.
-- **Config**: `backend/config/config.go`.
+- **Config**: `src/services/github-backup-api/config/config.go`.
 
-### Backup Worker (`backup-worker/`)
-- **Framework**: Go CLI (`backup-worker/main.go`).
+### Backup Worker Service (`src/services/github-backup-worker/`; legacy `backup-worker/`)
+- **Framework**: Go CLI (`src/services/github-backup-worker/cmd/github-backup-worker/main.go`).
 - **Responsibilities**:
   - Discovering repositories from GitHub Organizations & Personal accounts.
-  - Cloning / pulling mirrors locally into `backup-worker/_Repos/`.
-  - Caching remote HEAD commit hashes in `backup-worker/app.db`.
+  - Cloning / pulling mirrors locally into `src/services/github-backup-worker/_Repos/`.
+  - Caching remote HEAD commit hashes in `src/services/github-backup-worker/app.db`.
   - Recording telemetry, logs, and failure fixes to PostgreSQL.
-- **Config**: `backup-worker/config/data.config.go`.
+- **Config**: `src/services/github-backup-worker/config/data.config.go`.
 
 ---
 

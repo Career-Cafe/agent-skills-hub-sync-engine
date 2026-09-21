@@ -20,3 +20,4 @@ This directory contains the following dedicated skills:
 | :--- | :--- | :--- | :--- |
 | [`github-backup-architecture.md`](github-backup-architecture.md) | `codebase-github-backup-automation-system` | System Architecture | End-to-end system topology, service responsibilities (`frontend`, `agentic-observatory`, `backend`, `backup-worker`), and PostgreSQL database schema. |
 | [`agentic-observatory-workflow.md`](agentic-observatory-workflow.md) | `codebase-github-backup-automation-system` | AI Observatory | Adding tools to `agentic-observatory/data/tools/`, Tool-Calling RAG workflows, HITL email alerts, and OpenRouter multi-key pool failover. |
+| [`service-naming-standard.md`](service-naming-standard.md) | `codebase-github-backup-automation-system` | Naming & Layout | Canonical product names, source directories, commands, containers, and migration rules. |

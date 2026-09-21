@@ -63,13 +63,13 @@ description: >-
   - JWT Authentication for dashboard chat.
 - **Config**: `src/services/github-backup-observatory/config/settings.py`.
 
-### Backup API Service (`src/services/github-backup-api/`; legacy `backend/`)
+### Backup API Service (`src/backend/github-backup-api/`; legacy `backend/`)
 - **Framework**: Go Fiber v2, pgxpool connection pool.
 - **Responsibilities**:
   - Ingesting backup execution runs, repository results, and structured logs from the worker.
   - Serving real-time WebSocket hub for active backup runs (`/ws`).
   - Exposing database metrics and system telemetry.
-- **Config**: `src/services/github-backup-api/config/config.go`.
+- **Config**: `src/backend/github-backup-api/config/config.go`.
 
 ### Backup Worker Service (`src/services/github-backup-worker/`; legacy `backup-worker/`)
 - **Framework**: Go CLI (`src/services/github-backup-worker/cmd/github-backup-worker/main.go`).
@@ -84,7 +84,7 @@ description: >-
 
 ## 3. Database Schema Specification
 
-All migrations reside in `src/services/github-backup-api/db/migrations/` and run automatically on backup API startup:
+All migrations reside in `src/backend/github-backup-api/db/migrations/` and run automatically on backup API startup:
 
 1. `backup_runs`: Stores each backup batch (ID, status, total repos, duration, timestamps, error_message).
 2. `backup_results`: Per-repository outcome (status, error_message, sizes, commit_hash).

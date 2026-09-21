@@ -78,5 +78,5 @@ Centralized in `src/services/github-backup-observatory/utils/openrouter_keys.py`
 make test-agents
 
 # Run individual test modules
-cd agentic-observatory && uv run python -m unittest test_observability.py test_openrouter_keys.py test_agent_suite.py
+cd src/services/github-backup-observatory && uv run python -m unittest test_observability.py test_openrouter_keys.py test_agent_suite.py
 ```

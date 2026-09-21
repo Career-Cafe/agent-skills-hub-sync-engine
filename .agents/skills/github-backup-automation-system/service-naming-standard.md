@@ -18,12 +18,12 @@ Every deployable unit has a stable, product-prefixed name. Generic names such as
 | Responsibility | Canonical name | Canonical directory |
 |---|---|---|
 | Next.js dashboard | `github-backup-dashboard` | `src/apps/github-backup-dashboard/` |
-| Go REST and WebSocket API | `github-backup-api` | `src/services/github-backup-api/` |
+| Go REST and WebSocket API | `github-backup-api` | `src/backend/github-backup-api/` |
 | Python AI and RAG service | `github-backup-observatory` | `src/services/github-backup-observatory/` |
 | Go scheduled backup engine | `github-backup-worker` | `src/services/github-backup-worker/` |
-| Go MCP integration server | `github-backup-mcp` | `src/services/github-backup-mcp/` |
+| Go MCP integration server | `github-backup-mcp` | `src/backend/github-backup-mcp/` |
 
-The repository may use `src/apps/` for user-facing applications and `src/services/` for deployable runtime services. `src/service/` is not used because the plural form describes a collection and matches the repository's other directory conventions.
+The repository uses `src/apps/` for user-facing applications, `src/services/` for runtime workers and AI services, and `src/backend/` for the REST API and MCP integration server.
 
 ## Naming Rules
 

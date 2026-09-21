@@ -84,7 +84,7 @@ description: >-
 
 ## 3. Database Schema Specification
 
-All migrations reside in `backend/db/migrations/` and run automatically on Go backend startup:
+All migrations reside in `src/services/github-backup-api/db/migrations/` and run automatically on backup API startup:
 
 1. `backup_runs`: Stores each backup batch (ID, status, total repos, duration, timestamps, error_message).
 2. `backup_results`: Per-repository outcome (status, error_message, sizes, commit_hash).

@@ -8,13 +8,13 @@ description: >-
 # Agentic Observatory Service Workflow
 
 > [!IMPORTANT]
-> **CODEBASE-SPECIFIC SCOPE**: This skill is strictly specific to the **GitHub Backup Automation System** (`github-backup-automation-system`). It guides agents on modifying and extending `agentic-observatory/`.
+> **CODEBASE-SPECIFIC SCOPE**: This skill is strictly specific to the **GitHub Backup Automation System** (`github-backup-automation-system`). It guides agents on modifying and extending `src/services/github-backup-observatory/`.
 
 ---
 
 ## 1. Adding a Tool to the Observatory Agent
 
-1. Implement the tool in `agentic-observatory/data/tools/`:
+1. Implement the tool in `src/services/github-backup-observatory/data/tools/`:
    ```python
    from typing import Annotated, Any
    from langchain_core.tools import tool
@@ -27,8 +27,8 @@ description: >-
        """Query operational metrics from the PostgreSQL database."""
        return {"metric": metric_name, "count": limit}
    ```
-2. Export the tool in `agentic-observatory/data/tools/__init__.py`.
-3. Register the tool in `TOOLS` within `agentic-observatory/agent/openrouter.py`.
+2. Export the tool in `src/services/github-backup-observatory/data/tools/__init__.py`.
+3. Register the tool in `TOOLS` within `src/services/github-backup-observatory/agent/openrouter.py`.
 
 ---
 
@@ -43,7 +43,7 @@ The Observatory agent calls `hybrid_search_knowledge_base` during reasoning loop
 ## 3. Human-In-The-Loop (HITL) Confirmations
 
 Sensitive actions (e.g. `send_report_email`) require asynchronous user confirmation:
-1. Intercept in `agentic-observatory/agent/openrouter.py`:
+1. Intercept in `src/services/github-backup-observatory/agent/openrouter.py`:
    ```python
    if tool_name == "send_report_email":
        confirm_id = str(uuid.uuid4())
@@ -64,7 +64,7 @@ Sensitive actions (e.g. `send_report_email`) require asynchronous user confirmat
 
 ## 4. Multi-Key OpenRouter Failover
 
-Centralized in `agentic-observatory/utils/openrouter_keys.py`:
+Centralized in `src/services/github-backup-observatory/utils/openrouter_keys.py`:
 - `get_openrouter_api_keys()`: Reads comma-separated keys from environment.
 - `get_active_openrouter_key()`: Returns active client key.
 - `rotate_openrouter_key(failed_key, reason)`: Rotates to the next pool key on `401`, `402`, or `429` status codes.

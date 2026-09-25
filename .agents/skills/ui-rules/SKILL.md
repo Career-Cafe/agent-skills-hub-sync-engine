@@ -6,7 +6,7 @@ description: Frontend visual invariants for the dashboard and every app built on
 
 # UI Rules & Visual Engineering Standards
 
-These rules apply to `src/apps/github-backup-dashboard` and to any app that installs the
+These rules apply to the dashboard app under `src/apps/` and to any app that installs the
 Observatory design system ([`MishraShardendu22/observatory-ui`](https://github.com/MishraShardendu22/observatory-ui)):
 `@mishrashardendu22/observatory-tokens` (CSS custom properties, a Tailwind v4 theme, a typed
 object) and `@mishrashardendu22/observatory-ui` (React components and `styles.css`). The brand

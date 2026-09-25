@@ -235,6 +235,21 @@ cmd_push() {
     git add .agents/skills/
     if [[ -L "skills" ]]; then git add skills; fi
 
+    log_info "Running validation and test suites before commit..."
+    if [[ -f "scripts/validate-skills.py" ]]; then
+        if ! python3 scripts/validate-skills.py; then
+            log_error "Validation failed in staged skills! Aborting commit."
+            return 1
+        fi
+    fi
+
+    if [[ -d "tests" ]]; then
+        if ! python3 -m unittest discover -s tests -v; then
+            log_error "Unit tests failed! Aborting commit."
+            return 1
+        fi
+    fi
+
     local commit_msg="feat(skills): sync ${pushed_count} skill(s) from downstream repository"
     if [[ -n "$target_skill" ]]; then
         commit_msg="feat(skill): add/update ${target_skill} skill"
@@ -245,6 +260,14 @@ cmd_push() {
     commit_author="$(git config --global user.name 2>/dev/null || git config user.name 2>/dev/null || echo "Shardendu Mishra")"
     commit_email="$(git config --global user.email 2>/dev/null || git config user.email 2>/dev/null || echo "mishrashardendu22@gmail.com")"
     git -c user.name="$commit_author" -c user.email="$commit_email" commit -m "$commit_msg"
+
+    log_info "Verifying test suite passes before push..."
+    if [[ -d "tests" ]]; then
+        if ! python3 -m unittest discover -s tests -v; then
+            log_error "Pre-push test verification failed! Aborting push."
+            return 1
+        fi
+    fi
 
     log_info "Pushing commit to ${REPO_URL}:${BRANCH}..."
     if git push origin "$BRANCH"; then

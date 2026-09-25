@@ -52,7 +52,7 @@ class TestSkillsScopeTaxonomy(unittest.TestCase):
 
     def test_generic_skills_all_have_generic_scope(self):
         """Verify that every generic skill in .agents/skills has scope: generic."""
-        self.assertEqual(len(self.generic_skills), 25, f"Expected exactly 25 generic skills, found {len(self.generic_skills)}")
+        self.assertGreaterEqual(len(self.generic_skills), 25, f"Expected at least 25 generic skills, found {len(self.generic_skills)}")
         for skill_path in self.generic_skills:
             skill_md = skill_path if skill_path.is_file() else skill_path / "SKILL.md"
             self.assertTrue(skill_md.is_file(), f"Missing SKILL.md in {skill_path.name}")

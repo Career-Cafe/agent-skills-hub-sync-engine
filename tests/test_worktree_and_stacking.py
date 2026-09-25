@@ -27,6 +27,8 @@ class TestWorktreeAndStackingLifecycle(unittest.TestCase):
 
     def setUp(self):
         """Create a temporary git repository for testing worktree mechanics."""
+        for var in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY", "GIT_PREFIX"):
+            os.environ.pop(var, None)
         self.test_dir = tempfile.mkdtemp(prefix="test_wt_")
         self.repo_dir = os.path.join(self.test_dir, "repo")
         os.makedirs(self.repo_dir, exist_ok=True)

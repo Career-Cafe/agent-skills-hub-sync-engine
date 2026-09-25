@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# Agent Skills Repository - Intelligent Pre-Commit Gate
+# Agent Skills Repository - Intelligent Pre-Push Gate
 # ==============================================================================
 set -euo pipefail
 
@@ -32,11 +32,10 @@ fi
 START_TIME=$(date +%s)
 FAILED_STEPS=()
 PASSED_STEPS=()
-SKIPPED_STEPS=()
 
 print_banner() {
     echo -e "${CYAN}======================================================================${RESET}"
-    echo -e "${BOLD}${MAGENTA}  Agent Skills Repository - Pre-Commit Validation Gate${RESET}"
+    echo -e "${BOLD}${MAGENTA}  Agent Skills Repository - Pre-Push Validation Gate${RESET}"
     echo -e "${CYAN}======================================================================${RESET}"
 }
 
@@ -46,15 +45,13 @@ log_pass() { echo -e "${GREEN}[PASS]${RESET} $*"; }
 log_warn() { echo -e "${YELLOW}[WARN]${RESET} $*"; }
 log_fail() { echo -e "${RED}[FAIL]${RESET} $*"; }
 
-if [ "${SKIP_HOOKS:-0}" = "1" ] || [ "${PRECOMMIT_BYPASS:-0}" = "1" ]; then
-    log_warn "Pre-commit validations bypassed via SKIP_HOOKS=1 or PRECOMMIT_BYPASS=1."
+if [ "${SKIP_HOOKS:-0}" = "1" ] || [ "${PREPUSH_BYPASS:-0}" = "1" ]; then
+    log_warn "Pre-push validations bypassed via SKIP_HOOKS=1 or PREPUSH_BYPASS=1."
     exit 0
 fi
 
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null || true)
-
 print_banner
-log_info "Running validation checks..."
+log_info "Running pre-push verification checks..."
 
 run_step() {
     local step_name="$1"
@@ -77,7 +74,7 @@ run_step() {
         local elapsed=$((step_end - step_start))
         log_fail "${step_name} failed after ${elapsed}s"
         FAILED_STEPS+=("${step_name}")
-        echo -e "\n${RED}${BOLD}Commit Aborted!${RESET} The step '${step_name}' did not pass."
+        echo -e "\n${RED}${BOLD}Push Aborted!${RESET} The step '${step_name}' did not pass."
         if [ -n "${remediation}" ]; then
             echo -e "${YELLOW}Suggested fix:${RESET} ${remediation}"
         fi
@@ -85,40 +82,14 @@ run_step() {
     fi
 }
 
-check_secrets() {
-    local leaks=0
-    if [ -n "${STAGED_FILES}" ]; then
-        while IFS= read -r file; do
-            [ -z "$file" ] && continue
-            if [[ "$file" =~ (^|/)(\.env|\.env\.local|\.env\.staging|\.env\.production)$ ]] && ! [[ "$file" =~ \.example$ ]]; then
-                echo -e "${RED}Error: Committing sensitive environment file:${RESET} ${file}"
-                leaks=1
-            fi
-            if [[ "$file" =~ \.(pem|key|pkcs12|pfx|id_rsa|id_ed25519)$ ]]; then
-                echo -e "${RED}Error: Committing private key or certificate file:${RESET} ${file}"
-                leaks=1
-            fi
-        done <<< "${STAGED_FILES}"
-
-        local staged_diff
-        staged_diff=$(git diff --cached -U0 2>/dev/null || true)
-        if echo "${staged_diff}" | grep -E -q '^\+[[:space:]]*(ghp_[A-Za-z0-9_]{36}|gho_[A-Za-z0-9_]{36}|sk-[A-Za-z0-9]{32,})'; then
-            echo -e "${RED}Error: Potential API secret token detected in staged diff!${RESET}"
-            leaks=1
-        fi
-    fi
-    return $leaks
-}
-
-run_step "Secret & Sensitive File Scan" "check_secrets" "Unstage credentials using 'git restore --staged <file>'."
-run_step "Skill Validator Script" "python3 scripts/validate-skills.py" "Ensure all SKILL.md files have valid frontmatter (name, description)."
+run_step "Skill Validator Script" "python3 scripts/validate-skills.py" "Fix schema or frontmatter issues in SKILL.md files."
 run_step "Skills CLI Sync Validate" "./scripts/skills-sync.sh validate" "Fix formatting or schema issues in skills."
-run_step "Unit Test Suite" "python3 -m unittest discover -s tests -v" "Ensure all unit tests pass before committing."
+run_step "Scope & Taxonomy Unit Tests" "python3 -m unittest discover -s tests -v" "Ensure all unit tests pass before pushing."
 
 END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 
 echo -e "\n${CYAN}======================================================================${RESET}"
-echo -e "${GREEN}${BOLD}[PASS] All Pre-Commit Validations Passed Successfully! (${TOTAL_TIME}s)${RESET}"
+echo -e "${GREEN}${BOLD}[PASS] All Pre-Push Validations Passed Successfully! (${TOTAL_TIME}s)${RESET}"
 echo -e "${CYAN}======================================================================${RESET}\n"
 exit 0

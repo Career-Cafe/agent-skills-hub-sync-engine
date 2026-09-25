@@ -240,7 +240,11 @@ cmd_push() {
         commit_msg="feat(skill): add/update ${target_skill} skill"
     fi
 
-    git -c user.name="AI Agent" -c user.email="agent@users.noreply.github.com" commit -m "$commit_msg"
+    local commit_author
+    local commit_email
+    commit_author="$(git config --global user.name 2>/dev/null || git config user.name 2>/dev/null || echo "Shardendu Mishra")"
+    commit_email="$(git config --global user.email 2>/dev/null || git config user.email 2>/dev/null || echo "mishrashardendu22@gmail.com")"
+    git -c user.name="$commit_author" -c user.email="$commit_email" commit -m "$commit_msg"
 
     log_info "Pushing commit to ${REPO_URL}:${BRANCH}..."
     if git push origin "$BRANCH"; then

@@ -4,6 +4,7 @@ description: >-
   Use this skill to delegate subtasks, code refactoring, file analysis, or live web search
   to external CLI subagents (kiro-pool with multi-account rotation and puter-ai-cli/mycli).
   Contains model-selection strategies to minimize token/credit burn and handles quota limits.
+scope: generic
 ---
 
 # Kiro & Puter Multi-Account Subagent Delegation Guide

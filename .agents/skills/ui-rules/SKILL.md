@@ -82,7 +82,7 @@ any `hover:-translate-y-` utility.
 1. **No fake macOS window chrome**: no red/yellow/green dots on cards or modals.
 2. **No decorative icon pollution**: no `Sparkles`, `Bot`, `Layers`, `Cpu`, `Wrench`, `ShieldCheck`
    beside headings. Icons are functional (Lucide at 16px in controls, 18px in navigation, 20px in
-   icon tiles) and mark a state, a destination or an action. The GitHub mark is the one brand icon.
+   icon tiles) and mark a state, a destination or an action. The product mark is `ObservatoryMark` from the library (one ink, `currentColor`); the GitHub mark is only for links to GitHub. Illustrations are the brand's orbit scenes, kept to the landing hero, a closing panel and a site's home; never behind data.
 3. **No fake status lights or filler metrics**: numbers on a page are real numbers from the API,
    or the page shows nothing there.
 4. **No gradients, no coloured left borders, no 28px radii**: cards are flat `--bg-100` on a 1px

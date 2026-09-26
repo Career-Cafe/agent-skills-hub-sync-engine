@@ -131,14 +131,14 @@ If all accounts in `kiro-pool` are throttled, in cooldown, or require login, the
 ```
 or
 ```
-[kiro-pool ERROR] All pooled accounts require re-login. Re-enroll with 'kiro-pool add' or run 'kiro-pool prune'.
+[kiro-pool ERROR] All pooled accounts require re-login. Re-enroll with 'kiro-pool add/import' or run 'kiro-pool prune'.
 ```
-**Automated Safety:**  
-`kiro-pool` automatically detects unauthenticated or expired accounts and benches them without hanging or opening browser popups. If an account requires login, run `kiro-pool status` to check status, or `kiro-pool prune` to clean it up.
+**Automated Safety & Failover:**  
+`kiro-pool` automatically detects unauthenticated or expired accounts and benches them without hanging or opening browser popups. When an account hits quota limits or HTTP 429 throttling, `kiro-pool` benches it for 60 minutes and automatically fails over to the next healthy account of the same provider. If all accounts are exhausted, run `kiro-pool status` to check status, or `kiro-pool prune` to clean up invalid profiles.
 
 **Required Action:**  
 Immediately halt further Kiro calls and inform the user if all accounts are exhausted:
-> *"The Kiro CLI multi-account pool is currently exhausted or all accounts are in cooldown/need re-login. Please wait for the cooldown window to reset or add additional accounts via `kiro-pool add`."*  
+> *"The Kiro CLI multi-account pool is currently exhausted or all accounts are in cooldown/need re-login. Please wait for the cooldown window to reset or add additional accounts via `kiro-pool import <name>` or `kiro-pool add <name>`."*  
 Then seamlessly fall back to `mycli` (`gpt-5-nano` or `gpt-4o`) or Antigravity's direct tools.
 
 ### 2. Puter CLI Token Pool Exhaustion

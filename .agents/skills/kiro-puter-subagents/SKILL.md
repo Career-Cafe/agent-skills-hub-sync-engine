@@ -19,11 +19,11 @@ Both tools feature **multi-account token pools** to multiply free credits and av
 
 | Task Requirement | Recommended Engine | Command Pattern | Why? |
 |---|---|---|---|
-| **Autonomous Workspace File Edits** | `kiro-pool` | `kiro-pool chat --v3 -m <model> --no-interactive --trust-all-tools "..."` | Has direct tool permissions to inspect and edit files in the workspace. |
+| **Autonomous Workspace File Edits** | `kiro-pool` | `kiro-pool chat --v3 --model <model> --no-interactive --trust-all-tools "..."` | Has direct tool permissions to inspect and edit files in the workspace. |
 | **Real-time Live Web Search** | `puter` (`mycli`) | `mycli ask -m gpt-4o -w "..."` | Puter has native serverless web search (`-w` / `--web-search`) with live citations. |
-| **Ultra-cheap Bulk Code Generation** | `kiro-pool` | `kiro-pool chat --v3 -m qwen3-coder-next ...` | Consumes only **0.05x credits** (20x cheaper than standard models). |
+| **Ultra-cheap Bulk Code Generation** | `kiro-pool` | `kiro-pool chat --v3 --model qwen3-coder-next ...` | Consumes only **0.05x credits** (20x cheaper than standard models). |
 | **Everyday Quick Q&A / Text Lookups** | `puter` (`mycli`) | `mycli ask -m gpt-5-nano "..."` | Near-zero token latency (< 1s), uses Puter's serverless pool. |
-| **Precision Refactoring / Bug Finding** | `kiro-pool` | `kiro-pool chat --v3 -m claude-haiku-4.5 ...` | Claude Haiku 4.5 is extremely accurate on code at only **0.40x credits**. |
+| **Precision Refactoring / Bug Finding** | `kiro-pool` | `kiro-pool chat --v3 --model claude-haiku-4.5 ...` | Claude Haiku 4.5 is extremely accurate on code at only **0.40x credits**. |
 | **Deep Architecture / System Design** | `puter` (`mycli`) | `mycli ask -m gpt-5.4 "..."` | Full frontier GPT-5.4 reasoning capacity. |
 
 ---
@@ -47,19 +47,23 @@ Kiro charges credits per request based on a model multiplier:
 
 > [!IMPORTANT]
 > **Always use `kiro-pool` instead of `kiro-cli` directly.**  
-> Running `kiro-cli` exhausts your single default account. `kiro-pool` multiplexes requests across **10 enrolled Google accounts** with auto-failover and 60-minute cooldown recovery.
+> Running `kiro-cli` exhausts your single default account. `kiro-pool` multiplexes requests across enrolled Google and GitHub accounts with SQLite pre-flight authentication checks, headless safety (auto-skipping unauthenticated accounts), auto-failover, and 60-minute cooldown recovery. Run `kiro-pool prune` anytime to purge unauthenticated sessions from disk.
 
 ### 2. Puter AI CLI Models (`mycli`)
 
-Puter provides 1,000 monthly credits per account (currently pooled across 3 accounts = 3,000 credits):
+Puter provides 1,000 monthly credits per account (pooled across configured tokens):
 
 | Model ID | Speed | Web Search? | Optimal Use Case |
 |---|---|---|---|
 | **`gpt-5-nano`** *(Default)* | Ultra-fast (< 1s) | No | Fast code snippets, error explanation, formatting, small helper functions. |
 | **`gpt-4o`** | Fast (~2s) | **Yes (`-w`)** | Live web research, package documentation verification, balanced coding. |
-| **`gpt-5.3-codex`** | High accuracy | No | Backend systems, API design, data pipeline implementations. |
 | **`gpt-5.4`** | Frontier reasoning | No | Complex system architecture, performance optimization strategy. |
-| **`claude-3-5-sonnet`** | High quality | No | Elegant code structure, technical documentation writing. |
+| **`claude-haiku-4.5`** | High speed | No | Rapid precision coding, refactoring, and lint resolution. |
+| **`claude-sonnet-4.5`** | High quality | No | State-of-the-art coding and technical documentation. *(Auto-resolves from `claude-3-5-sonnet` / `claude-3.5`)*. |
+| **`deepseek-chat`** | Fast | No | General reasoning and script generation. |
+
+> [!TIP]
+> Run `mycli models` to list all supported models, active providers, and alias mappings live from Puter AI.
 
 ---
 
@@ -120,14 +124,21 @@ cat src/config.go | mycli ask "Check this configuration for potential race condi
 
 When delegating tasks, monitor exit codes and stderr for quota exhaustion:
 
-### 1. Kiro Account Pool Limit Exhaustion
-If all accounts in `kiro-pool` are throttled or in cooldown, the command returns code 1 or 429 with:
+### 1. Kiro Account Pool Limit Exhaustion & Re-login
+If all accounts in `kiro-pool` are throttled, in cooldown, or require login, the command returns code 1 with:
 ```
-[kiro-pool ERROR] All pooled accounts are currently throttled or no accounts exist.
+[kiro-pool ERROR] All active accounts are currently in cooldown (rate limited).
 ```
+or
+```
+[kiro-pool ERROR] All pooled accounts require re-login. Re-enroll with 'kiro-pool add' or run 'kiro-pool prune'.
+```
+**Automated Safety:**  
+`kiro-pool` automatically detects unauthenticated or expired accounts and benches them without hanging or opening browser popups. If an account requires login, run `kiro-pool status` to check status, or `kiro-pool prune` to clean it up.
+
 **Required Action:**  
-Immediately halt further Kiro calls and inform the user:
-> *"The Kiro CLI multi-account pool limit is exhausted. All 10 accounts are currently in cooldown or out of credits. Please wait for the cooldown window to reset or add additional accounts via `kiro-pool add`."*  
+Immediately halt further Kiro calls and inform the user if all accounts are exhausted:
+> *"The Kiro CLI multi-account pool is currently exhausted or all accounts are in cooldown/need re-login. Please wait for the cooldown window to reset or add additional accounts via `kiro-pool add`."*  
 Then seamlessly fall back to `mycli` (`gpt-5-nano` or `gpt-4o`) or Antigravity's direct tools.
 
 ### 2. Puter CLI Token Pool Exhaustion

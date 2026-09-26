@@ -37,7 +37,9 @@ book that explains the tokens lives with the design system; this skill is the en
 - Use the library: `Button`/`ButtonLink`/`IconButton`, `Card`/`CardHead`/`CardTitle`/`CardMeta`,
   `StatCard`/`StatStrip`, `PageHeader`/`Kicker`, `Badge`/`StatusBadge`/`Pill`, `Field`/`Input`/
   `Textarea`/`Select`/`Checkbox`/`Segmented`, `Table`/`TableWrap`, `List`/`ListRow`, `Steps`,
-  `Notice`, `NavCard`, `EmptyState`/`ErrorState`/`LoadingState`/`Spinner`/`Skeleton`, `GitHubIcon`.
+  `Notice`, `NavCard`, `EmptyState`/`ErrorState`/`LoadingState`/`LoadingPanel`/`Spinner`/`Skeleton`,
+  `Dialog`, `Dropdown`, `Tabs`/`Tab`, `Pagination`, the `AppShell`/`Sidebar`/`TreeNode` family, `GitHubIcon`.
+  An app keeps no UI primitives of its own: a missing piece is added to the library and released.
   For client navigation pass `component={Link}` to `ButtonLink`, `NavCard` and `ListRow`.
 - Inline `style={{…}}` is for one-off layout (a gap, a max-width), never for colour, radius,
   font or shadow. A block of inline styles that recurs is a missing component: add it to the

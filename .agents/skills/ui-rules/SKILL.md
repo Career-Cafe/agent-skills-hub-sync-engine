@@ -108,5 +108,6 @@ any `hover:-translate-y-` utility.
 
 `pnpm run lint` (Biome), `pnpm exec tsc --noEmit`, `pnpm test` (includes the hover-motion test)
 and `pnpm run build` run in the pre-commit hook and in CI. A change to the design system itself is
-made in `observatory-ui`, released as a tag, and picked up here by bumping the two tarball URLs in
-`package.json` and running `pnpm install`.
+made in the library repository; its merge publishes the packages and opens the upgrade pull request
+in this repository automatically (exact versions, regenerated lockfiles), so the two packages are
+never bumped by hand in a feature branch.
